@@ -16,12 +16,11 @@ df = spotify_dataset.drop(['artist_count', 'in_spotify_charts', 'in_apple_charts
 train_set, test_set = train_test_split(df, test_size=0.3, random_state=42)
 
 # Verifica le dimensioni dei dataset
-print(f"Dimensioni train_set: {train_set.shape}")
-print(f"Dimensioni test_set: {test_set.shape}")
+#print(f"Dimensioni train_set: {train_set.shape}")
+#print(f"Dimensioni test_set: {test_set.shape}")
 
 # Esporta i due dataset se necessario
 train_set.to_csv('train_set.csv', index=False)
 test_set.to_csv('test_set.csv', index=False)
 
 train_set
-test_set

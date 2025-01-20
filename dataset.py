@@ -5,6 +5,7 @@ import seaborn as sns
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
+import random
 
 from sklearn.model_selection import train_test_split
 pd.__version__
@@ -74,6 +75,9 @@ train_set.to_csv('train_set.csv', index=False)
 test_set.to_csv('test_set.csv', index=False)
 
 
+#Stampa del conteggio dei mood
+print(train_set['mood'].value_counts())
+
 #print(train_set)
 #print(test_set)
 
@@ -81,22 +85,28 @@ test_set.to_csv('test_set.csv', index=False)
 user_mood = input("Scegli un mood (Felicità, Relax, Tristezza, Carica,Ballabile): ")
 
 # Filtra il DataFrame per il mood selezionato
-Playlist = train_set[train_set['mood'] == user_mood]
+mood_set = train_set[train_set['mood'] == user_mood]
+
+mood_st=mood_set
+
 
 # Preprocessing: Selezioniamo solo le colonne numeriche per il clustering
-features = Playlist[['valence_%', 'energy_%', 'danceability_%', 'bpm', 'acousticness_%']]
+features = mood_st[['valence_%', 'energy_%', 'danceability_%', 'bpm', 'acousticness_%']]
 
 # Normalizzazione delle caratteristiche
 scaler = StandardScaler()
 scaled_features = scaler.fit_transform(features)
 
+# Creare una copia esplicita di mood_st per evitare il problema del SettingWithCopyWarning
+mood_st = mood_st.copy()
+
 # Clustering: KMeans
 kmeans = KMeans(n_clusters=2, random_state=42)
-Playlist['cluster'] = kmeans.fit_predict(scaled_features)
+mood_st['cluster'] = kmeans.fit_predict(scaled_features)
 
 # Analisi dei cluster: Calcoliamo la media solo per le colonne numeriche
-numeric_columns = Playlist.select_dtypes(include=['float64', 'int64']).columns
-cluster_means = Playlist.groupby('cluster')[numeric_columns].mean()
+numeric_columns = mood_st.select_dtypes(include=['float64', 'int64']).columns
+cluster_means = mood_st.groupby('cluster')[numeric_columns].mean()
 
 # Stampa dei risultati
 print(cluster_means)
@@ -105,24 +115,31 @@ print(cluster_means)
 # Visualizza tutte le canzoni per cluster
 for i in range(2): 
     print(f"\nCluster {i}:")
-    print(Playlist[Playlist['cluster'] == i][['track_name', 'artist(s)_name', 'cluster']])
+    print(mood_st[mood_st['cluster'] == i][['track_name', 'artist(s)_name', 'cluster']])
 
 
-#PCA per ridurre la dimensionalità
-pca = PCA(n_components=2)  # Riduciamo a 2 dimensioni
-pca_components = pca.fit_transform(scaled_features)
+# Riduzione delle dimensioni a 2 componenti principali usando PCA
+pca = PCA(n_components=2, random_state=42)
+reduced_features = pca.fit_transform(scaled_features)
 
-# Aggiungiamo i componenti PCA al dataset
-Playlist['pca1'] = pca_components[:, 0]
-Playlist['pca2'] = pca_components[:, 1]
+# Aggiungere le componenti principali al DataFrame
+mood_st['PCA1'] = reduced_features[:, 0]
+mood_st['PCA2'] = reduced_features[:, 1]
 
-# Visualizzazione dei cluster con PCA
-plt.figure(figsize=(10, 8))
-sns.scatterplot(x='pca1', y='pca2', hue='cluster', palette='Set1', data=Playlist, s=100, alpha=0.7, edgecolor='k')
+# Visualizzazione dei cluster
+plt.figure(figsize=(10, 7))
+for cluster in mood_st['cluster'].unique():
+    cluster_data = mood_st[mood_st['cluster'] == cluster]
+    plt.scatter(cluster_data['PCA1'], cluster_data['PCA2'], label=f'Cluster {cluster}', s=50)
 
-# Aggiungi titoli e altre etichette
-plt.title('Visualizzazione dei Cluster con PCA')
-plt.xlabel('Componente Principale 1')
-plt.ylabel('Componente Principale 2')
-plt.legend(title='Cluster')
-plt.savefig('cluster.png')
+plt.title('Visualizzazione dei cluster (PCA)')
+plt.xlabel('PCA1')
+plt.ylabel('PCA2')
+plt.legend()
+plt.grid(True)
+plt.savefig("cluster.png")
+
+indice=random.randint(1,kmeans.n_clusters)-1
+print(indice)
+playlist_scelta=mood_st[mood_st['cluster']==indice][['track_name', 'artist(s)_name', 'cluster']]
+print(playlist_scelta)

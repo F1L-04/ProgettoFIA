@@ -2,6 +2,9 @@ import pandas as pd
 import funzioni as f
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
 
 from sklearn.model_selection import train_test_split
 pd.__version__
@@ -19,10 +22,12 @@ df = spotify_dataset.drop(['artist_count', 'in_spotify_charts', 'in_apple_charts
 nan_mask = df.isna()
 nan_count = nan_mask.sum()
 
+
 #print( nan_count)
 
 #Stampa tutte le righe
 #pd.set_option("display.max_rows", None)
+
 
 #Eliminazione righe con valori nulli
 df.dropna(inplace= True)
@@ -30,6 +35,7 @@ df.dropna(inplace= True)
 #Verifica della corrette eliminazione delle righe nulle 
 nan_mask = df.isna()
 nan_count = nan_mask.sum()
+
 
 #print( nan_count)
 
@@ -41,15 +47,16 @@ df['mood'] = df.apply(f.assign_mood, axis=1)
 #print(df)
 
 #Visualizzo i Mood
+
 #Scatter Plot: Confronta valence ed energy per vedere la distribuzione dei mood.
-sns.scatterplot(data=df, x='valence_%', y='energy_%', hue='mood')
-plt.title('Distribuzione dei Mood')
-plt.savefig('scatterplot.png')
+#sns.scatterplot(data=df, x='valence_%', y='energy_%', hue='mood')
+#plt.title('Distribuzione dei Mood')
+#plt.savefig('scatterplot.png')
 
 #Grafico di distribuzione
-sns.countplot(x='mood', data=df)
-plt.title('Distribuzione dei Mood')
-plt.savefig('grafico.png')
+#sns.countplot(x='mood', data=df)
+#plt.title('Distribuzione dei Mood')
+#plt.savefig('grafico.png')
 
 #Stampa del conteggio dei mood
 print(df['mood'].value_counts())
@@ -61,9 +68,61 @@ train_set, test_set = train_test_split(df, test_size=0.3, random_state=42)
 #print(f"Dimensioni train_set: {train_set.shape}")
 #print(f"Dimensioni test_set: {test_set.shape}")
 
+
 # Esporta i due dataset se necessario
 train_set.to_csv('train_set.csv', index=False)
 test_set.to_csv('test_set.csv', index=False)
 
+
 #print(train_set)
 #print(test_set)
+
+# Chiedi all'utente di scegliere un mood
+user_mood = input("Scegli un mood (Felicità, Relax, Tristezza, Carica,Ballabile): ")
+
+# Filtra il DataFrame per il mood selezionato
+Playlist = train_set[train_set['mood'] == user_mood]
+
+# Preprocessing: Selezioniamo solo le colonne numeriche per il clustering
+features = Playlist[['valence_%', 'energy_%', 'danceability_%', 'bpm', 'acousticness_%']]
+
+# Normalizzazione delle caratteristiche
+scaler = StandardScaler()
+scaled_features = scaler.fit_transform(features)
+
+# Clustering: KMeans
+kmeans = KMeans(n_clusters=2, random_state=42)
+Playlist['cluster'] = kmeans.fit_predict(scaled_features)
+
+# Analisi dei cluster: Calcoliamo la media solo per le colonne numeriche
+numeric_columns = Playlist.select_dtypes(include=['float64', 'int64']).columns
+cluster_means = Playlist.groupby('cluster')[numeric_columns].mean()
+
+# Stampa dei risultati
+print(cluster_means)
+
+
+# Visualizza tutte le canzoni per cluster
+for i in range(2): 
+    print(f"\nCluster {i}:")
+    print(Playlist[Playlist['cluster'] == i][['track_name', 'artist(s)_name', 'cluster']])
+
+
+#PCA per ridurre la dimensionalità
+pca = PCA(n_components=2)  # Riduciamo a 2 dimensioni
+pca_components = pca.fit_transform(scaled_features)
+
+# Aggiungiamo i componenti PCA al dataset
+Playlist['pca1'] = pca_components[:, 0]
+Playlist['pca2'] = pca_components[:, 1]
+
+# Visualizzazione dei cluster con PCA
+plt.figure(figsize=(10, 8))
+sns.scatterplot(x='pca1', y='pca2', hue='cluster', palette='Set1', data=Playlist, s=100, alpha=0.7, edgecolor='k')
+
+# Aggiungi titoli e altre etichette
+plt.title('Visualizzazione dei Cluster con PCA')
+plt.xlabel('Componente Principale 1')
+plt.ylabel('Componente Principale 2')
+plt.legend(title='Cluster')
+plt.savefig('cluster.png')

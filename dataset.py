@@ -112,7 +112,7 @@ scaler = StandardScaler()
 scaled_features = scaler.fit_transform(features)
 
 # Clustering: KMeans
-kmeans = KMeans(n_clusters=5, random_state=42)
+kmeans = KMeans(n_clusters=2, random_state=42)
 Playlist['cluster'] = kmeans.fit_predict(scaled_features)
 
 # Analisi dei cluster: Calcoliamo la media solo per le colonne numeriche
@@ -124,7 +124,7 @@ print(cluster_means)
 
 
 # Visualizza tutte le canzoni per cluster
-for i in range(5): 
+for i in range(2): 
     print(f"\nCluster {i}:")
     print(Playlist[Playlist['cluster'] == i][['track_name', 'artist(s)_name', 'cluster']])
 

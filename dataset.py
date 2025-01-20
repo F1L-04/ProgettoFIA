@@ -5,6 +5,7 @@ import seaborn as sns
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
+from sklearn.cluster import MeanShift
 
 from sklearn.model_selection import train_test_split
 pd.__version__
@@ -111,9 +112,8 @@ features = Playlist[['valence_%', 'energy_%', 'danceability_%', 'bpm', 'acoustic
 scaler = StandardScaler()
 scaled_features = scaler.fit_transform(features)
 
-# Clustering: KMeans
-kmeans = KMeans(n_clusters=5, random_state=42)
-Playlist['cluster'] = kmeans.fit_predict(scaled_features)
+mean_shift = MeanShift()
+Playlist['cluster'] = mean_shift.fit_predict(scaled_features)
 
 # Analisi dei cluster: Calcoliamo la media solo per le colonne numeriche
 numeric_columns = Playlist.select_dtypes(include=['float64', 'int64']).columns
@@ -122,15 +122,12 @@ cluster_means = Playlist.groupby('cluster')[numeric_columns].mean()
 # Stampa dei risultati
 print(cluster_means)
 
-
 # Visualizza tutte le canzoni per cluster
-for i in range(5): 
+for i in range(len(cluster_means)):
     print(f"\nCluster {i}:")
     print(Playlist[Playlist['cluster'] == i][['track_name', 'artist(s)_name', 'cluster']])
 
-
-
-#PCA per ridurre la dimensionalità
+# PCA per ridurre la dimensionalità
 pca = PCA(n_components=2)  # Riduciamo a 2 dimensioni
 pca_components = pca.fit_transform(scaled_features)
 

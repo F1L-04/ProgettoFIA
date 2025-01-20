@@ -10,15 +10,15 @@
 #derivo la variabile mood con la regola basate su soglie
 
 def assign_mood(row):
-    if row['valence_%'] >= 70 and row['energy_%'] >= 60:
+    if row['valence_%'] >= 60 and row['energy_%'] >= 50:
         return 'Felicità'
-    elif row['acousticness_%'] >= 80 and row['energy_%'] < 40:
+    elif row['acousticness_%'] >= 70 and row['energy_%'] < 40:
         return 'Relax'
     elif row['valence_%'] <= 30 and row['energy_%'] <= 40:
         return 'Tristezza'
-    elif row['energy_%'] >= 70 and row['bpm'] >= 120:
+    elif row['energy_%'] >= 60 and row['bpm'] >= 100:
         return 'Carica'
-    elif row['danceability_%'] >= 80:
+    elif row['danceability_%'] >= 60:
         return 'Ballabile'
     else:
         return 'Neutro'

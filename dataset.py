@@ -1,5 +1,7 @@
 import pandas as pd
 import funzioni as f
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 from sklearn.model_selection import train_test_split
 pd.__version__
@@ -18,7 +20,7 @@ nan_mask = df.isna()
 nan_count = nan_mask.sum()
 
 
-print( nan_count)
+#print( nan_count)
 
 #Stampa tutte le righe
 #pd.set_option("display.max_rows", None)
@@ -32,15 +34,29 @@ nan_mask = df.isna()
 nan_count = nan_mask.sum()
 
 
-print( nan_count)
+#print( nan_count)
 
-print(df.describe)
+#print(df.describe)
 
 # Applicato al dataset la funzione per aggiungere la colonna mood
 df['mood'] = df.apply(f.assign_mood, axis=1)
  
-print(df)
+#print(df)
 
+#Visualizzo i Mood
+
+#Scatter Plot: Confronta valence ed energy per vedere la distribuzione dei mood.
+sns.scatterplot(data=df, x='valence_%', y='energy_%', hue='mood')
+plt.title('Distribuzione dei Mood')
+plt.savefig('scatterplot.png')
+
+#Grafico di distribuzione
+sns.countplot(x='mood', data=df)
+plt.title('Distribuzione dei Mood')
+plt.savefig('grafico.png')
+
+#Stampa del conteggio dei mood
+print(df['mood'].value_counts())
 
 # Dividi il dataset in 70% training e 30% testing
 train_set, test_set = train_test_split(df, test_size=0.3, random_state=42)
@@ -55,8 +71,8 @@ train_set.to_csv('train_set.csv', index=False)
 test_set.to_csv('test_set.csv', index=False)
 
 
-print(train_set)
-print(test_set)
+#print(train_set)
+#print(test_set)
 
 
 

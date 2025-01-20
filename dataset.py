@@ -19,12 +19,10 @@ df = spotify_dataset.drop(['artist_count', 'in_spotify_charts', 'in_apple_charts
 nan_mask = df.isna()
 nan_count = nan_mask.sum()
 
-
 #print( nan_count)
 
 #Stampa tutte le righe
 #pd.set_option("display.max_rows", None)
-
 
 #Eliminazione righe con valori nulli
 df.dropna(inplace= True)
@@ -32,7 +30,6 @@ df.dropna(inplace= True)
 #Verifica della corrette eliminazione delle righe nulle 
 nan_mask = df.isna()
 nan_count = nan_mask.sum()
-
 
 #print( nan_count)
 
@@ -44,7 +41,6 @@ df['mood'] = df.apply(f.assign_mood, axis=1)
 #print(df)
 
 #Visualizzo i Mood
-
 #Scatter Plot: Confronta valence ed energy per vedere la distribuzione dei mood.
 sns.scatterplot(data=df, x='valence_%', y='energy_%', hue='mood')
 plt.title('Distribuzione dei Mood')
@@ -65,15 +61,9 @@ train_set, test_set = train_test_split(df, test_size=0.3, random_state=42)
 #print(f"Dimensioni train_set: {train_set.shape}")
 #print(f"Dimensioni test_set: {test_set.shape}")
 
-
 # Esporta i due dataset se necessario
 train_set.to_csv('train_set.csv', index=False)
 test_set.to_csv('test_set.csv', index=False)
 
-
 #print(train_set)
 #print(test_set)
-
-
-
-

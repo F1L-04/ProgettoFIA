@@ -107,7 +107,8 @@ scaled_features = scaler.fit_transform(features)
 #mood_st = mood_st.copy()
 
 # Clustering: KMeans
-kmeans = KMeans(n_clusters=2, random_state=42)
+n_clusters = f.dynamic_clusters(len(mood_st))
+kmeans = KMeans(n_clusters, random_state=42)
 mood_st['cluster'] = kmeans.fit_predict(scaled_features)
 
 # Analisi dei cluster: Calcoliamo la media solo per le colonne numeriche
@@ -119,7 +120,7 @@ print(cluster_means)
 
 
 # Visualizza tutte le canzoni per cluster
-for i in range(2): 
+for i in range(n_clusters): 
     print(f"\nCluster {i}:")
     print(mood_st[mood_st['cluster'] == i][['track_name', 'artist(s)_name', 'cluster']])
 

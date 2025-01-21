@@ -32,3 +32,7 @@ def assign_mood(row):
             return 'Ballabile'
         else:
             return 'Neutro'
+
+
+def dynamic_clusters(song_count):
+    return max(1, song_count // 50)  # Ogni cluster avrà almeno 50 canzoni

@@ -89,6 +89,15 @@ mood_set = train_set[train_set['mood'] == user_mood]
 
 mood_st=mood_set.copy()
 
+#Ballabilità vs Felicità:
+#•    Quanto una canzone è ballabile rispetto a quanto è felice.
+#Energia vs Acustica:
+#•    Differenza tra energia e la componente acustica, che indica quanto una canzone è “potente” rispetto alla sua dolcezza.
+#Energia × Ballabilità:
+#•    Un indicatore che combina il livello di energia e la ballabilità.
+#Acustica × Felicità:
+#•    Indica tracce acustiche che mantengono una positività elevata.
+
 mood_st['dance_valence_ratio'] = mood_st['danceability_%'] / (mood_st['valence_%'] + 1e-5)
 mood_st['energy_acoustic_diff'] = mood_st['energy_%'] - mood_st['acousticness_%']
 mood_st['energy_dance_combo'] = mood_st['energy_%'] * mood_st['danceability_%']

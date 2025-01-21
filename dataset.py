@@ -87,18 +87,24 @@ user_mood = input("Scegli un mood (Felicità, Relax, Tristezza, Carica,Ballabile
 # Filtra il DataFrame per il mood selezionato
 mood_set = train_set[train_set['mood'] == user_mood]
 
-mood_st=mood_set
+mood_st=mood_set.copy()
 
+mood_st['dance_valence_ratio'] = mood_st['danceability_%'] / (mood_st['valence_%'] + 1e-5)
+mood_st['energy_acoustic_diff'] = mood_st['energy_%'] - mood_st['acousticness_%']
+mood_st['energy_dance_combo'] = mood_st['energy_%'] * mood_st['danceability_%']
+mood_st['acoustic_valence_combo'] = mood_st['acousticness_%'] * mood_st['valence_%']
+
+print(mood_st)
 
 # Preprocessing: Selezioniamo solo le colonne numeriche per il clustering
-features = mood_st[['valence_%', 'energy_%', 'danceability_%', 'bpm', 'acousticness_%']]
+features = mood_st[['dance_valence_ratio', 'energy_acoustic_diff', 'energy_dance_combo', 'acoustic_valence_combo']]
 
 # Normalizzazione delle caratteristiche
 scaler = StandardScaler()
 scaled_features = scaler.fit_transform(features)
 
 # Creare una copia esplicita di mood_st per evitare il problema del SettingWithCopyWarning
-mood_st = mood_st.copy()
+#mood_st = mood_st.copy()
 
 # Clustering: KMeans
 kmeans = KMeans(n_clusters=2, random_state=42)
@@ -143,3 +149,6 @@ indice=random.randint(1,kmeans.n_clusters)-1
 print(indice)
 playlist_scelta=mood_st[mood_st['cluster']==indice][['track_name', 'artist(s)_name', 'cluster']]
 print(playlist_scelta)
+
+playlist_scelta.to_csv(f'Playlist_scelta.csv', index=False)
+print(f"Playlist_scelta salvata")

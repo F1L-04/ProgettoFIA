@@ -71,8 +71,8 @@ train_set, test_set = train_test_split(df, test_size=0.3, random_state=42)
 
 
 # Esporta i due dataset se necessario
-train_set.to_csv('train_set.csv', index=False)
-test_set.to_csv('test_set.csv', index=False)
+train_set.to_csv('train_set.csv', encoding='utf-8', index=False)
+test_set.to_csv('test_set.csv', encoding='utf-8', index=False)
 
 
 #Stampa del conteggio dei mood
@@ -160,5 +160,5 @@ print(indice)
 playlist_scelta=mood_st[mood_st['cluster']==indice][['track_name', 'artist(s)_name', 'cluster']]
 print(playlist_scelta)
 
-playlist_scelta.to_csv(f'Playlist_scelta.csv', index=False)
+playlist_scelta.to_csv(f'Playlist_scelta.csv', encoding='utf-8', index=False)
 print(f"Playlist_scelta salvata")

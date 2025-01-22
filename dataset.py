@@ -10,7 +10,7 @@ import random
 from sklearn.model_selection import train_test_split
 pd.__version__
 
-spotify_dataset = pd.read_csv('spotify-2023.csv', encoding='latin1')
+spotify_dataset = pd.read_csv('spotify-2023.csv', encoding='utf-8')
 
 # Stampa le prime righe del DataFrame
 spotify_dataset
@@ -76,7 +76,7 @@ test_set.to_csv('test_set.csv', encoding='utf-8', index=False)
 
 
 #Stampa del conteggio dei mood
-print(train_set['mood'].value_counts())
+print(test_set['mood'].value_counts())
 
 #print(train_set)
 #print(test_set)
@@ -85,7 +85,7 @@ print(train_set['mood'].value_counts())
 user_mood = input("Scegli un mood (Felicità, Relax, Tristezza, Carica,Ballabile): ")
 
 # Filtra il DataFrame per il mood selezionato
-mood_set = train_set[train_set['mood'] == user_mood]
+mood_set = test_set[test_set['mood'] == user_mood]
 
 mood_st=mood_set.copy()
 

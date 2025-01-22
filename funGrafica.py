@@ -6,12 +6,13 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 import random
+import playlistSpotify as spotify
 
 from sklearn.model_selection import train_test_split
 pd.__version__
 
 def genera_playlist(user_mood):
-  train_set=pd.read_csv('train_set.csv', encoding='utf-8')
+  train_set=pd.read_csv('test_set.csv', encoding='utf-8')
   print(train_set.head()['mood']) 
   print("USER_MOOD "+user_mood)
   train_set['mood'] = train_set['mood'].str.strip()  # Rimuove gli spazi extra
@@ -38,7 +39,8 @@ def genera_playlist(user_mood):
   #mood_st = mood_st.copy()
 
   # Clustering: KMeans
-  kmeans = KMeans(n_clusters=2, random_state=42)
+  n_clusters = f.dynamic_clusters(len(mood_st))
+  kmeans = KMeans(n_clusters, random_state=42)
   mood_st['cluster'] = kmeans.fit_predict(scaled_features)
 
   # Analisi dei cluster: Calcoliamo la media solo per le colonne numeriche
@@ -50,7 +52,7 @@ def genera_playlist(user_mood):
 
 
   # Visualizza tutte le canzoni per cluster
-  for i in range(2): 
+  for i in range(n_clusters): 
       print(f"\nCluster {i}:")
       print(mood_st[mood_st['cluster'] == i][['track_name', 'artist(s)_name', 'cluster']])
 
@@ -84,5 +86,7 @@ def genera_playlist(user_mood):
   playlist_scelta.to_csv(f'Playlist_scelta.csv', index=False)
   filePath='Playlist_scelta.csv'
   print(f"Playlist_scelta salvata")
+
+  spotify.manage_playlist(playlist_scelta)
 
   return playlist_scelta,filePath

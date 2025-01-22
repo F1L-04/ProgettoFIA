@@ -10,7 +10,7 @@ import random
 from sklearn.model_selection import train_test_split
 pd.__version__
 
-spotify_dataset = pd.read_csv('spotify-2023.csv', encoding='utf-8')
+spotify_dataset = pd.read_csv('spotify-2023.csv', encoding='latin1')
 
 # Stampa le prime righe del DataFrame
 spotify_dataset

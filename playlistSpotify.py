@@ -90,3 +90,6 @@ def manage_playlist(playlist):
     # Aggiungi i brani alla playlist
     if track_uris_to_add:
         add_tracks_to_playlist(playlist_id, track_uris_to_add)
+    # Costruisci il link Spotify
+    playlist_link = f"https://open.spotify.com/playlist/{playlist_id}"
+    return playlist_link

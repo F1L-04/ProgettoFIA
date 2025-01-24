@@ -87,6 +87,6 @@ def genera_playlist(user_mood):
   filePath='Playlist_scelta.csv'
   print(f"Playlist_scelta salvata")
 
-  spotify.manage_playlist(playlist_scelta)
+  link_playlist=spotify.manage_playlist(playlist_scelta)
 
-  return playlist_scelta,filePath
+  return playlist_scelta,filePath,link_playlist

@@ -17,7 +17,7 @@ def genera_playlist_e_link(mood):
 # Interfaccia
 interfaccia = gr.Interface(
     fn=genera_playlist_e_link,
-    inputs=gr.Dropdown(["Felicità", "Tristezza", "Relax", "Carica", "Ballabile", "Neutro"], label="Seleziona un mood"),
+    inputs=gr.Dropdown(["Felicità", "Tristezza", "Relax", "Carica", "Ballabile"], label="Seleziona un mood"),
     outputs=[gr.DataFrame(label="Playlist generata"), 
              gr.HTML(label="Link Spotify"),
              gr.File(label="Scarica CSV")], 

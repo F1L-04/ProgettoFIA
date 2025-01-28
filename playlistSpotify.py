@@ -10,6 +10,7 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
     scope="playlist-modify-private playlist-modify-public"  # Permessi per la modifica di playlist pubbliche e private
 ))
 
+
 # ID della playlist esistente (sostituisci con l'ID della playlist che vuoi modificare)
 playlist_id = "1EDCrFThjnlM8eZx63FtqW"  # Playlist ID che vuoi usare
 
@@ -61,10 +62,6 @@ def manage_playlist(playlist):
         print("La playlist non è vuota, svuotando...")
         clear_playlist(playlist_id)  # Svuota la playlist se non è vuota
 
-    # Carica il CSV con i dati delle canzoni
-    #df = pd.read_csv('Playlist_scelta.csv')  # Assicurati che il percorso del CSV sia corretto
-
-    # Assicurati che il CSV abbia le colonne "Nome" e "Artista" (o i nomi delle colonne corretti)
     tracks_to_add = [(row['track_name'], row['artist(s)_name']) for _, row in playlist.iterrows()]
 
     # Cerca le tracce e ottieni gli URI

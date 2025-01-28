@@ -35,8 +35,6 @@ def genera_playlist(user_mood):
   scaler = StandardScaler()
   scaled_features = scaler.fit_transform(features)
 
-  # Creare una copia esplicita di mood_st per evitare il problema del SettingWithCopyWarning
-  #mood_st = mood_st.copy()
 
   # Clustering: KMeans
   n_clusters = f.dynamic_clusters(len(mood_st))

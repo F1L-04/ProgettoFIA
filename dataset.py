@@ -24,12 +24,6 @@ nan_mask = df.isna()
 nan_count = nan_mask.sum()
 
 
-#print( nan_count)
-
-#Stampa tutte le righe
-#pd.set_option("display.max_rows", None)
-
-
 #Eliminazione righe con valori nulli
 df.dropna(inplace= True)
 
@@ -38,14 +32,9 @@ nan_mask = df.isna()
 nan_count = nan_mask.sum()
 
 
-#print( nan_count)
-
-#print(df.describe)
-
 # Applicato al dataset la funzione per aggiungere la colonna mood
 df['mood'] = df.apply(f.assign_mood, axis=1)
- 
-#print(df)
+
 
 #Visualizzo i Mood
 
@@ -65,11 +54,6 @@ print(df['mood'].value_counts())
 # Dividi il dataset in 70% training e 30% testing
 train_set, test_set = train_test_split(df, test_size=0.3, random_state=42)
 
-# Verifica le dimensioni dei dataset
-#print(f"Dimensioni train_set: {train_set.shape}")
-#print(f"Dimensioni test_set: {test_set.shape}")
-
-
 # Esporta i due dataset se necessario
 train_set.to_csv('train_set.csv', encoding='utf-8', index=False)
 test_set.to_csv('test_set.csv', encoding='utf-8', index=False)
@@ -77,9 +61,6 @@ test_set.to_csv('test_set.csv', encoding='utf-8', index=False)
 
 #Stampa del conteggio dei mood
 print(test_set['mood'].value_counts())
-
-#print(train_set)
-#print(test_set)
 
 # Chiedi all'utente di scegliere un mood
 user_mood = input("Scegli un mood (Felicità, Relax, Tristezza, Carica,Ballabile): ")
@@ -111,9 +92,6 @@ features = mood_st[['dance_valence_ratio', 'energy_acoustic_diff', 'energy_dance
 # Normalizzazione delle caratteristiche
 scaler = StandardScaler()
 scaled_features = scaler.fit_transform(features)
-
-# Creare una copia esplicita di mood_st per evitare il problema del SettingWithCopyWarning
-#mood_st = mood_st.copy()
 
 # Clustering: KMeans
 n_clusters = f.dynamic_clusters(len(mood_st))

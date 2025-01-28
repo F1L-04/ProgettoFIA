@@ -4,27 +4,11 @@ import pandas as pd
 
 # Configura le credenziali di Spotify
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
-    client_id="7a8f41fa05dd4f98b30102a1b8e1f826",        # Sostituisci con il tuo Client ID
-    client_secret="cf7cb59199c948ab83e76df023c6f559", # Sostituisci con il tuo Client Secret
+    client_id="7a8f41fa05dd4f98b30102a1b8e1f826",       
+    client_secret="cf7cb59199c948ab83e76df023c6f559", 
     redirect_uri="http://localhost:8888/callback",  # URI configurato su Spotify Developer
     scope="playlist-modify-private playlist-modify-public"  # Permessi per la modifica di playlist pubbliche e private
 ))
-
-
-# Ottieni l'URL di autorizzazione
-#auth_url = sp.auth_manager.get_authorize_url()
-#print(f"Visita questo link per autenticarti: {auth_url}")
-
-# Dopo aver autorizzato, copia e incolla il codice qui
-#authorization_code = input("Inserisci il codice di autorizzazione che ottieni dopo aver autorizzato l'accesso: ")
-
-# Usa il codice per ottenere il token di accesso
-#sp.auth_manager.get_access_token(authorization_code)
-
-# Verifica se l'autenticazione è stata completata correttamente
-#user_id = sp.me()['id']
-#print(f"Autenticazione completata! ID utente: {user_id}")
-
 
 # ID della playlist esistente (sostituisci con l'ID della playlist che vuoi modificare)
 playlist_id = "1EDCrFThjnlM8eZx63FtqW"  # Playlist ID che vuoi usare
